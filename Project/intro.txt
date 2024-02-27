@@ -1,0 +1,31 @@
+vendors
+    registration
+    login
+    manage product(upload, view, edit, delete)
+    upload
+    name, price, description, image ===upload in db
+
+
+    //to accept images files text we use enctype in html
+    use $_FILES instead of post in php file for images
+    there is a function called move_upload_files() in php
+    takes two parameter source path and destination path
+
+    store image path in sql db
+
+     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+   
+
+   for edit in vendors
+    the logic is if i click the edit it 
+    should show upload with predefined products(name priceetc)
+    
+
+
+    clent 
+    view cart show total amount
+    complete with css card 
+    remove from cart
