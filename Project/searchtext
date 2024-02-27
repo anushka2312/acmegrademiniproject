@@ -1,0 +1,119 @@
+//html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Search</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Product Search</h1>
+        <input type="text" id="searchInput" placeholder="Enter product name...">
+        <div id="searchResults"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+//js
+
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.trim();
+
+        if (searchTerm !== '') {
+            fetch(`search.php?query=${searchTerm}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data);
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            searchResults.innerHTML = '';
+        }
+    });
+
+    function displayResults(data) {
+        let html = '';
+        data.forEach(product => {
+            html += `<div class="product">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <p>Price: $${product.price}</p>
+                    </div>`;
+        });
+        searchResults.innerHTML = html;
+    }
+});
+
+
+
+
+//php
+<?php
+// Database connection
+$servername = "localhost";
+$username = "username";
+$password = "password";
+$database = "database_name";
+
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Get search query
+$searchTerm = $_GET['query'];
+
+// SQL query to search for products by name
+$sql = "SELECT * FROM products WHERE name LIKE '%$searchTerm%'";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output data of each row
+    $rows = array();
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+    echo json_encode($rows);
+} else {
+    echo json_encode(array());
+}
+
+$conn->close();
+?>
+
+
+
+//css
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#searchResults {
+    margin-top: 20px;
+}
+
+.product {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.product h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
